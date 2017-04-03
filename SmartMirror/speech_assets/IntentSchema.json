@@ -1,0 +1,25 @@
+{
+	"intents": [
+		{
+			"intent": "AMAZON.ResumeIntent"
+		},
+		{
+			"intent": "AMAZON.PauseIntent"
+		},
+		{
+			"intent": "HelloWorldIntent"
+		},
+		{
+			"intent": "AMAZON.HelpIntent"
+		},
+		{
+			"intent": "NavigateIntent",
+			"slots": [
+				{
+					"name": "Route",
+					"type": "LIST_OF_ROUTES"
+				}
+			]
+		}
+	]
+}
