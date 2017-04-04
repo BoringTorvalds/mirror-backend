@@ -13,6 +13,16 @@
 			"intent": "AMAZON.HelpIntent"
 		},
 		{
+			"intent": "MyNameIsIntent",
+			"slot": [{
+				"name": "firstname",
+				"type": "AMAZON.US_FIRST_NAME"
+			}]
+		},
+		{
+			"intent": "CreateProfileIntent"
+		},
+		{
 			"intent": "NavigateIntent",
 			"slots": [
 				{
