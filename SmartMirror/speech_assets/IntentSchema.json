@@ -14,7 +14,7 @@
 		},
 		{
 			"intent": "MyNameIsIntent",
-			"slot": [{
+			"slots": [{
 				"name": "firstname",
 				"type": "AMAZON.US_FIRST_NAME"
 			}]
@@ -28,6 +28,15 @@
 				{
 					"name": "Route",
 					"type": "LIST_OF_ROUTES"
+				}
+			]
+		},
+		{
+			"intent": "TurnOnOffIntent",
+			"slots": [
+				{
+					"name": "Status",
+					"type": "LIST_OF_STATUS"
 				}
 			]
 		}

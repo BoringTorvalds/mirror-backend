@@ -26,14 +26,14 @@ type Message struct {
 }
 
 func main() {
-	// Create a simple file server
-	//fs := http.FileServer(http.Dir("../public"))
 	r := mux.NewRouter()
-	//r.Handle("/", fs)
-	r.HandleFunc("/navigate/{route}", navigateHandler)
-
 	// Configure websocket route
 	r.HandleFunc("/ws", handleConnections)
+
+	// Navigate to a mirror page
+	r.HandleFunc("/navigate/{route}", navigateHandler)
+	// Handle signup with name
+	r.HandleFunc("/signup/{name}", signupHandler)
 	http.Handle("/", r)
 
 	// Start listening for incoming chat messages
@@ -47,6 +47,7 @@ func main() {
 	}
 }
 
+// Navigate the mirror to the expected route
 func navigateHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	msg := &Message{
@@ -56,9 +57,20 @@ func navigateHandler(w http.ResponseWriter, r *http.Request) {
 	msgObject, _ := json.Marshal(msg)
 	w.Write(msgObject)
 	broadcast <- *msg
-
-	log.Println("body: ", string(msgObject))
 }
+
+// Sign up callbacks from Alexa
+func signupHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	msg := &Message{
+		Content: vars["name"],
+		Type:    "signup",
+	}
+	msgObject, _ := json.Marshal(msg)
+	w.Write(msgObject)
+	broadcast <- *msg
+}
+
 func handleConnections(w http.ResponseWriter, r *http.Request) {
 	// Upgrade initial GET request to a websocket
 	ws, err := upgrader.Upgrade(w, r, nil)

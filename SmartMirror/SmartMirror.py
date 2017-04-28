@@ -1,38 +1,48 @@
 import logging
-import redis
 from flask import Flask
 from flask_ask import Ask, request, session, question, statement
 import os
+import requests
 
 
 app = Flask(__name__)
 ask = Ask(app, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
-r = redis.from_url("redis://h:p06b10c763b6d7785f6c7c7f27b6152493b47abef3a0a76619cc8951b22b5f92e@ec2-34-204-242-91.compute-1.amazonaws.com:19749")
-
-@app.route("/test")
-def test():
-    return "Successs"
+SERVER_URL = "http://localhost:9000"
 
 @ask.intent('HelloWorldIntent')
 def hello_world():
     speech_text = 'Hello world'
-    r.publish('hello','new message from me')
     return statement(speech_text).simple_card('HelloWorld', speech_text)
-
 
 @ask.intent('AMAZON.HelpIntent')
 def help():
     speech_text = 'You can say hello to me!'
     return question(speech_text).reprompt(speech_text).simple_card('HelloWorld', speech_text)
 
+
+@ask.intent('TurnOnOffIntent', 
+        mapping={'status': 'Status'})
+def navigate(status):
+    speech_text = "Mirror is going to " + str(status)
+    err_speech_text = "There's an issue with " + str(status)
+    r = requests.get(SERVER_URL + "/navigate/" + status)
+    if r.status_code == 200:
+        return statement(speech_text).simple_card("Routing to ", speech_text)
+    else:
+        return statement(err_speech_text).simple_card(err_speech_text)
+
 @ask.intent('NavigateIntent', 
         mapping={'route': 'Route'})
 def navigate(route):
-    speech_text = str(route)
-    r.publish('navigation',route)
-    print("NAVIGATING")
-    return statement(speech_text).simple_card('Routing to',speech_text)
+    speech_text = "Mirror is going to " + str(route)
+    err_speech_text = "There's an issue with " + str(route)
+    r = requests.get(SERVER_URL + "/navigate/" + route)
+    if r.status_code == 200:
+        return statement(speech_text).simple_card("Routing to ", speech_text)
+    else:
+        return statement(err_speech_text).simple_card(err_speech_text)
+
 
 
 @ask.intent('CreateProfileIntent')
