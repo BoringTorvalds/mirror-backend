@@ -34,6 +34,8 @@ func main() {
 	r.HandleFunc("/navigate/{route}", navigateHandler)
 	// Handle signup with name
 	r.HandleFunc("/signup/{name}", signupHandler)
+	// Handle training options
+	r.HandleFunc("/training/{option}", trainingHandler)
 	http.Handle("/", r)
 
 	// Start listening for incoming chat messages
@@ -66,6 +68,19 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		Content: vars["name"],
 		Type:    "signup",
 	}
+	msgObject, _ := json.Marshal(msg)
+	w.Write(msgObject)
+	broadcast <- *msg
+}
+
+// Switch on and off training mode
+func trainingHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	msg := &Message{
+		Content: vars["option"],
+		Type:    "training",
+	}
+
 	msgObject, _ := json.Marshal(msg)
 	w.Write(msgObject)
 	broadcast <- *msg
