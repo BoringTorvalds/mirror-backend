@@ -1,0 +1,4 @@
+package: github.com/treeder/dockergo
+import:
+- package: github.com/gorilla/mux
+- package: github.com/gorilla/websocket
