@@ -41,9 +41,9 @@ func main() {
 	// Start listening for incoming chat messages
 	go handleMessages()
 
-	// Start the server on localhost port 8000 and log any errors
-	log.Println("http server started on :8000")
-	err := http.ListenAndServe(":9000", nil)
+	// Start the server on localhost port 9001 and log any errors
+	log.Println("http server started on :9001")
+	err := http.ListenAndServe(":9001", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
