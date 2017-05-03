@@ -54,7 +54,12 @@ def create_profile():
 @ask.intent('MyNameIsIntent')
 def my_name_is(firstname):
     speech_text= "Hi {}, please position your face at the center of mirror".format(firstname)
-    return statement(speech_text)
+    err_speech_text = "Error"
+    r = requests.get(SERVER_URL + "/signup/" +firstname)
+    if r.status_code == 200:
+        return statement(speech_text).simple_card("",speech_text)
+    else:
+        return statement(err_speech_text).simple_card(err_speech_text)
 
 @ask.session_ended
 def session_ended():
