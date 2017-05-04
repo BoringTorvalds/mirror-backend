@@ -24,3 +24,7 @@ weather: |
 
 news: |
   Displaying {{option}} news
+
+stock_lookup: |
+  Pulling information for {{name}} on {{exch}} exchange
+

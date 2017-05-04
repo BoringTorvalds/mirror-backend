@@ -76,6 +76,15 @@
 					"type":"LIST_OF_NEWS_OPTIONS"
 				}
 			]
+		},
+		{
+			"intent": "StockLookupIntent",
+			"slots": [
+				{
+					"name":"Title",
+					"type":"AMAZON.Corporation"
+				}
+			]
 		}
 	]
 }

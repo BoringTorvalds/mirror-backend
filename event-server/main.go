@@ -25,6 +25,11 @@ type Message struct {
 	Type    string `json:"type"`
 }
 
+type Stock struct {
+	Title  string `json:"title"`
+	Symbol string `json:"symbol"`
+}
+
 func main() {
 	r := mux.NewRouter()
 	// Configure websocket route
@@ -40,6 +45,7 @@ func main() {
 	r.HandleFunc("/weather/{location}", weatherHandler)
 	r.HandleFunc("/fullweather/{location}", fullWeatherHandler)
 	r.HandleFunc("/feeds/{option}", feedsHandler)
+	r.HandleFunc("/stock/{title}/{symbol}/{exch}", stockHandler)
 	http.Handle("/", r)
 
 	// Start listening for incoming chat messages
@@ -65,6 +71,19 @@ func navigateHandler(w http.ResponseWriter, r *http.Request) {
 	broadcast <- *msg
 }
 
+// Request for stock
+func stockHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	str := vars["title"] + "/" + vars["symbol"] + "/" + vars["exch"]
+	log.Println(str)
+	msg := &Message{
+		Content: str,
+		Type:    "stock",
+	}
+	msgObject, _ := json.Marshal(msg)
+	w.Write(msgObject)
+	broadcast <- *msg
+}
 func weatherHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	msg := &Message{

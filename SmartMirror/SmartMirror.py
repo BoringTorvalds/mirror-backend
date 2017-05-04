@@ -114,6 +114,33 @@ def  show_more_news(option):
     else:
         return statement(err_speech_text).simple_card(err_speech_text)
 
+@ask.intent('StockLookupIntent',
+    mapping={'title':'Title'})
+def look_up_stock(title):
+    #Make a request to look for stockname
+    STOCK_API = "http://dev.markitondemand.com/Api/v2/Lookup/json?input="+title
+    stock_response = requests.get(STOCK_API)
+    err_speech_text = render_template("error")
+    if stock_response.status_code == 200:
+        if len(stock_response.json()) == 0:
+            return statement(err_speech_text).simple_card(err_speech_text)
+        else:
+            return request_stock_from(stock_response.json()[0])
+    else:
+        return statement(err_speech_text).simple_card(err_speech_text)
+
+def request_stock_from(stock_object):
+    name = stock_object['Name']
+    symb = stock_object['Symbol']
+    exch = stock_object['Exchange']
+    r = requests.get(SERVER_URL + "/stock/"+name + "/"+symb+"/"+exch)
+    text_speech = render_template("stock_lookup",name=name,symb=symb,exch=exch)
+    err_speech_text = render_template("error")
+    if r.status_code == 200:
+        return statement(text_speech).simple_card(text_speech)
+    return statement(err_speech_text).simple_card(err_speech_text)
+
+
 @ask.session_ended
 def session_ended():
     return "", 200

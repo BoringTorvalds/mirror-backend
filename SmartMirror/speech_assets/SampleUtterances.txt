@@ -21,3 +21,6 @@ FullWeatherIntent week report about weather in {Location}
 NewsPaginationIntent get me {Option} news
 NewsPaginationIntent display me {Option} news
 NewsPaginationIntent show me {Option} news
+StockLookupIntent give me {Title} stock
+StockLookupIntent look up {Title} stock
+StockLookupIntent get stock from {Title}
