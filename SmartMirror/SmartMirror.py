@@ -1,5 +1,5 @@
 import logging
-from flask import Flask
+from flask import Flask, render_template
 from flask_ask import Ask, request, session, question, statement
 import os
 import requests
@@ -8,8 +8,8 @@ import requests
 app = Flask(__name__)
 ask = Ask(app, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
-SERVER_URL = "http://localhost:9000"
-
+#SERVER_URL = "http://184.73.147.177:9001"
+SERVER_URL= "http://localhost:9001"
 @ask.intent('HelloWorldIntent')
 def hello_world():
     speech_text = 'Hello world'
@@ -24,19 +24,22 @@ def help():
 @ask.intent('TurnOnOffIntent', 
         mapping={'status': 'Status'})
 def navigate(status):
-    speech_text = "Mirror is going to " + str(status)
-    err_speech_text = "There's an issue with " + str(status)
+    speech_text = render_template('turn_off')
+    if str(status) == 'on':
+        speech_text = render_template('turn_on') 
+
     r = requests.get(SERVER_URL + "/navigate/" + status)
+    err_speech_text = render_template('error')
     if r.status_code == 200:
-        return statement(speech_text).simple_card("Routing to ", speech_text)
+        return statement(speech_text).simple_card(speech_text)
     else:
         return statement(err_speech_text).simple_card(err_speech_text)
 
 @ask.intent('NavigateIntent', 
         mapping={'route': 'Route'})
 def navigate(route):
-    speech_text = "Mirror is going to " + str(route)
-    err_speech_text = "There's an issue with " + str(route)
+    speech_text = render_template('navigation',route=route)
+    err_speech_text = render_template('error')
     r = requests.get(SERVER_URL + "/navigate/" + route)
     if r.status_code == 200:
         return statement(speech_text).simple_card("Routing to ", speech_text)
@@ -47,17 +50,67 @@ def navigate(route):
 
 @ask.intent('CreateProfileIntent')
 def create_profile():
+    r = requests.get(SERVER_URL + "/navigate/signup")
     speech_text = "Let's get started. What is your name?"
     reprompt_speech_text = "May I please have your name?"
+    err_speech_text = render_template('error')
     return question(speech_text).reprompt(reprompt_speech_text)
 
 @ask.intent('MyNameIsIntent')
 def my_name_is(firstname):
-    speech_text= "Hi {}, please position your face at the center of mirror".format(firstname)
-    err_speech_text = "Error"
+    speech_text= render_template("prompt_name",name=firstname)
     r = requests.get(SERVER_URL + "/signup/" +firstname)
+    err_speech_text = render_template('error')
     if r.status_code == 200:
-        return statement(speech_text).simple_card("",speech_text)
+        return question(speech_text)
+    else:
+        return statement(err_speech_text).simple_card(err_speech_text)
+
+@ask.intent('TrainingOnOffIntent',
+    mapping={'status': 'Status'})
+def respond_to_training(status):
+    speech_text = render_template("train_on")
+    if status == 'off':
+        speech_text = render_template("train_off")
+    r = requests.get(SERVER_URL + "/training/"+status)
+    err_speech_text = render_template('error')
+    if r.status_code == 200:
+        return statement(speech_text).simple_card(speech_text)
+    else:
+        return statement(err_speech_text).simple_card(err_speech_text)
+
+@ask.intent('WeatherIntent',
+    mapping={'location':'Location'})
+def show_weather(location):
+    speech_text = render_template("weather",location=location)
+    r = requests.get(SERVER_URL + "/weather/" + location)
+    err_speech_text = render_template('error')
+    if r.status_code == 200:
+        return statement(speech_text).simple_card(speech_text)
+    else:
+        return statement(err_speech_text).simple_card(err_speech_text)
+
+@ask.intent('FullWeatherIntent',
+    mapping={'location':'Location'})
+def show_weather_detail(location):
+    speech_text = render_template("weather",location=location)
+    if location == "":
+        speech_text = render_template("weather",location="current location")
+    r = requests.get(SERVER_URL + "/fullweather/" + location)
+    err_speech_text = render_template('error')
+    if r.status_code == 200:
+        return statement(speech_text).simple_card(speech_text)
+    else:
+        return statement(err_speech_text).simple_card(err_speech_text)
+
+@ask.intent('NewsPaginationIntent',
+    mapping={'option':'Option'})
+def  show_more_news(option):
+    speech_text = render_template("news",option=option)
+    err_speech_text = render_template('error')
+    r = requests.get(SERVER_URL + "/feeds/" + option)
+    if r.status_code == 200:
+        return statement(speech_text).simple_card(speech_text)
     else:
         return statement(err_speech_text).simple_card(err_speech_text)
 

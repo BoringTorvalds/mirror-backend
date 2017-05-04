@@ -1,0 +1,26 @@
+turn_on: |
+  Mirror is now turned on
+
+turn_off: |
+  Turning off mirror
+
+navigation: |
+  Going to {{route}} page
+
+error: |
+  There are some issues processing your request, please try again
+
+prompt_name: |
+  Hello {{name}}, please position your face at the center of mirror. Say read when you are ready
+
+train_on: |
+  I am creating a profile based on your face. Please wait
+
+train_off: |
+  Terminate training process
+
+weather: |
+  Displaying weather in {{location}}
+
+news: |
+  Displaying {{option}} news

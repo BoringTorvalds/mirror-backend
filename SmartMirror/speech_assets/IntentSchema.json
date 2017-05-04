@@ -31,12 +31,49 @@
 				}
 			]
 		},
+
+		{
+			"intent": "TrainingOnOffIntent",
+			"slots": [
+				{
+					"name": "Status",
+					"type": "LIST_OF_STATUS"
+				}
+			]
+		},
 		{
 			"intent": "TurnOnOffIntent",
 			"slots": [
 				{
 					"name": "Status",
 					"type": "LIST_OF_STATUS"
+				}
+			]
+		},
+		{
+			"intent": "WeatherIntent",
+			"slots": [
+				{
+					"name":"Location",
+					"type":"AMAZON.US_CITY"
+				}
+			]
+		},
+		{
+			"intent": "FullWeatherIntent",
+			"slots": [
+				{
+					"name":"Location",
+					"type":"AMAZON.US_CITY"
+				}
+			]
+		},
+		{
+			"intent": "NewsPaginationIntent",
+			"slots": [
+				{
+					"name":"Option",
+					"type":"LIST_OF_NEWS_OPTIONS"
 				}
 			]
 		}

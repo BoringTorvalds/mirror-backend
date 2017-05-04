@@ -36,6 +36,10 @@ func main() {
 	r.HandleFunc("/signup/{name}", signupHandler)
 	// Handle training options
 	r.HandleFunc("/training/{option}", trainingHandler)
+	// Handle weather
+	r.HandleFunc("/weather/{location}", weatherHandler)
+	r.HandleFunc("/fullweather/{location}", fullWeatherHandler)
+	r.HandleFunc("/feeds/{option}", feedsHandler)
 	http.Handle("/", r)
 
 	// Start listening for incoming chat messages
@@ -61,6 +65,18 @@ func navigateHandler(w http.ResponseWriter, r *http.Request) {
 	broadcast <- *msg
 }
 
+func weatherHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	msg := &Message{
+		Content: vars["location"],
+		Type:    "weather",
+	}
+
+	msgObject, _ := json.Marshal(msg)
+	w.Write(msgObject)
+	broadcast <- *msg
+}
+
 // Sign up callbacks from Alexa
 func signupHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -79,6 +95,29 @@ func trainingHandler(w http.ResponseWriter, r *http.Request) {
 	msg := &Message{
 		Content: vars["option"],
 		Type:    "training",
+	}
+
+	msgObject, _ := json.Marshal(msg)
+	w.Write(msgObject)
+	broadcast <- *msg
+}
+func fullWeatherHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	msg := &Message{
+		Content: vars["location"],
+		Type:    "full_weather",
+	}
+
+	msgObject, _ := json.Marshal(msg)
+	w.Write(msgObject)
+	broadcast <- *msg
+}
+
+func feedsHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	msg := &Message{
+		Content: vars["option"],
+		Type:    "feeds",
 	}
 
 	msgObject, _ := json.Marshal(msg)

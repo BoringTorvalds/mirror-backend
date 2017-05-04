@@ -5,10 +5,19 @@ HelloWorldIntent say hi
 HelloWorldIntent say hi world
 HelloWorldIntent hi
 HelloWorldIntent how are you
+MyNameIsIntent my name is {firstname}
 CreateProfileIntent create a new profile
 CreateProfileIntent sign me up
 CreateProfileIntent new profile
 NavigateIntent navigate me to {Route}
-NavigateIntent show me {Route}
-NavigateIntent turn {Route}
-MyNameIsIntent my name is {firstname}
+NavigateIntent go to {Route}
+TurnOnOffIntent turn {Status}
+TrainingOnOffIntent set training {Status}
+WeatherIntent what's the weather like in {Location}
+WeatherIntent how's the weather like in {Location}
+FullWeatherIntent what's detailed weather in {Location}
+FullWeatherIntent detailed about weather in {Location}
+FullWeatherIntent week report about weather in {Location}
+NewsPaginationIntent get me {Option} news
+NewsPaginationIntent display me {Option} news
+NewsPaginationIntent show me {Option} news
